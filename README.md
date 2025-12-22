@@ -18,3 +18,9 @@ Rodar as migrations do projeto
 ```bash
 sail artisan migrate
 ```
+
+Configurar os mocks de produtos
+```bash
+sail artisan seed:local-products
+```
+
