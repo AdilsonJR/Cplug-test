@@ -19,3 +19,7 @@ Artisan::command('seed:local-products', function () {
 
     $this->info('Local products criado.');
 })->purpose('Seed de produtos mock para ambiente local');
+
+Schedule::command('inventory:prune-old')
+    ->dailyAt(config('commands.pruneOldInventory.at'))
+    ->withoutOverlapping();
