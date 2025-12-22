@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Response;
 
 class StoreInventoryRequest extends FormRequest
 {
@@ -25,9 +26,8 @@ class StoreInventoryRequest extends FormRequest
 
     protected function failedValidation(Validator $validator): void
     {
-        throw new HttpResponseException(response()->json([
-            'message' => 'Ocorreu uma falha na validação dos dados.',
-            'errors' => $validator->errors(),
-        ], 422));
+        throw new HttpResponseException(
+            Response::validationErrorApi('Ocorreu uma falha na validação dos dados.', 422, $validator->errors()->toArray())
+        );
     }
 }

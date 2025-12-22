@@ -16,12 +16,16 @@ class InventoryController extends Controller
             $inventory = $useCase->execute(InventoryEntryDTO::fromRequest($request));
             return response()->json($inventory, 201);
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->validationErrorApi( $e->getMessage(), 400);
         }
     }
 
     public function index(GetInventoryUseCase $useCase)
     {
-        return response()->json($useCase->execute());
+        try {
+            return response()->json($useCase->execute());
+        } catch (Exception $e) {
+            return response()->validationErrorApi( $e->getMessage(), 400);
+        }
     }
 }
