@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTOs\InventoryEntryDTO;
 use App\Http\Requests\StoreInventoryRequest;
+use App\UseCases\GetInventoryUseCase;
 use App\UseCases\StoreInventoryUseCase;
 use Exception;
 
@@ -17,5 +18,10 @@ class InventoryController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function index(GetInventoryUseCase $useCase)
+    {
+        return response()->json($useCase->execute());
     }
 }

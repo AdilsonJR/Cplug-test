@@ -22,4 +22,12 @@ class ProductRepository
         $product->update(['cost_price' => $costPrice]);
         return $product;
     }
+
+    public function getAllproductsIdsAvailable(): array
+    {
+        return Product::query()
+            ->select('id')
+            ->pluck('id')
+            ->toArray();
+    }
 }

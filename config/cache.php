@@ -17,6 +17,8 @@ return [
 
     'default' => env('CACHE_STORE', 'database'),
 
+    'product_cache_ttl' => env('PRODUCT_CACHE_TTL', 1440),
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores
