@@ -17,6 +17,11 @@ class Product extends Model
         'sale_price',
     ];
 
+    protected $casts = [
+        'cost_price' => 'float',
+        'sale_price' => 'float',
+    ];
+
     public function inventory()
     {
         return $this->hasOne(Inventory::class);
