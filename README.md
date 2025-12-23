@@ -37,3 +37,11 @@ para executar a fila de atualização de estoque utilize o seguinte comando
 ```bash
 sail artisan queue:work --queue=inventory --tries=10
 ```
+
+### testes
+
+para executar a stack de testes utilize o seguinte comando
+```bash
+sail artisan test
+```
+

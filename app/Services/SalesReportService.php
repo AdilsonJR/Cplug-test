@@ -41,15 +41,15 @@ class SalesReportService
     public function sumTotalSalesAmount(Collection $sales): float
     {
         return $sales->reduce(function ($carry, $sale) {
-            return $carry + $sale->total_amount;
-        }, 0);
+            return $carry + (float) $sale->total_amount;
+        }, 0.0);
     }
 
     public function sumTotalSalesCost(Collection $sales): float
     {
         return $sales->reduce(function ($carry, $sale) {
-            return $carry + $sale->total_cost;
-        }, 0);
+            return $carry + (float) $sale->total_cost;
+        }, 0.0);
     }
 
     public function calculateTotalSalesProfit(Collection $sales): float
