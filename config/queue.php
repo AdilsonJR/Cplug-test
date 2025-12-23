@@ -2,6 +2,9 @@
 
 return [
 
+    'sales_max_attempt' => env('SALES_MAX_ATTEMPT', 5),
+    'update_inventory_max_attempt' => env('UPDATE_INVENTORY_MAX_ATTEMPT', 5),
+
     /*
     |--------------------------------------------------------------------------
     | Default Queue Connection Name

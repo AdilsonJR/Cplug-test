@@ -20,4 +20,9 @@ class Sale extends Model
     {
         return $this->hasMany(SaleItem::class);
     }
+
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
 }

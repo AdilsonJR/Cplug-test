@@ -2,8 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\SaleCreated;
+use App\Models\Sale;
+use App\Observers\SaleObserver;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
+use App\Listeners\DispatchSaleCreated;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +31,7 @@ class AppServiceProvider extends ServiceProvider
                 'errors' => $errors,
             ], $statusCode);
         });
+
+        Sale::observe(SaleObserver::class);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Inventory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Models\SaleItem;
 
 class InventoryRepository
 {
@@ -36,5 +37,12 @@ class InventoryRepository
             )
             ->where('products.id', $productId)
             ->first();
+    }
+
+    public function loadProductAndInventoryWithLockForUpdate(array $saleItemIds): Collection
+    {
+        return SaleItem::whereIn('id', $saleItemIds)
+            ->with(['product.inventory' => fn($q) => $q->lockForUpdate()])
+            ->get();
     }
 }

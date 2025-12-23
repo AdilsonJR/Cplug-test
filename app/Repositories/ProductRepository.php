@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use Illuminate\Support\Collection;
 
 class ProductRepository
 {
@@ -29,5 +30,24 @@ class ProductRepository
             ->select('id')
             ->pluck('id')
             ->toArray();
+    }
+
+    public function getByIdsOrSkus(array $productIds, array $skus): Collection
+    {
+        return Product::query()
+            ->where(function ($query) use ($productIds, $skus) {
+                if ($productIds) {
+                    $query->whereIn('id', array_unique($productIds));
+                }
+
+                if ($skus) {
+                    if ($productIds) {
+                        $query->orWhereIn('sku', array_unique($skus));
+                    } else {
+                        $query->whereIn('sku', array_unique($skus));
+                    }
+                }
+            })
+            ->get();
     }
 }

@@ -8,6 +8,7 @@ use App\Repositories\ProductRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use Illuminate\Support\Collection;
 
 class InventoryService
 {
@@ -27,16 +28,7 @@ class InventoryService
                 $this->products->updateCostPrice($product, $dto->costPrice);
             }
 
-            $this->inventory->createOrUpdate(
-                [
-                    'product_id' => $product->id,
-                ],
-                [
-                    'product_id' => $product->id,
-                    'quantity' => $dto->quantity,
-                    'last_updated' => now(),
-                ]
-            );
+            $this->updateQuantity($product->id, $dto->quantity);
 
             DB::commit();
             $this->refreshProductCache($product->id);
@@ -45,6 +37,25 @@ class InventoryService
             DB::rollBack();
             throw $e;
         }
+    }
+
+    public function updateQuantity(int $productId, int $quantityChange): void
+    {
+        $this->inventory->createOrUpdate(
+                [
+                    'product_id' => $productId,
+                ],
+                [
+                    'product_id' => $productId,
+                    'quantity' => $quantityChange,
+                    'last_updated' => now(),
+                ]
+            );
+    }
+
+    public function loadProductAndInventoryWithLockForUpdate(array $saleItemIds): Collection
+    {
+        return $this->inventory->loadProductAndInventoryWithLockForUpdate($saleItemIds);
     }
 
     public function getInventory(): array
@@ -71,7 +82,7 @@ class InventoryService
         return $items;
     }
 
-    private function refreshProductCache(int $productId): void
+    public function refreshProductCache(int $productId): void
     {
         $row = $this->inventory->getInventoryWithProductByProductId($productId);
 

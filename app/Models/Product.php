@@ -31,4 +31,9 @@ class Product extends Model
     {
         return $this->hasMany(SaleItem::class);
     }
+
+    public function getAvailableInventoryQuantity(): float
+    {
+        return (float) $this->inventory?->quantity ?? 0;
+    }
 }

@@ -24,3 +24,16 @@ Configurar os mocks de produtos
 sail artisan seed:local-products
 ```
 
+### queues
+
+Para esse teste as queues estão utilizando a conexão do redis
+
+para executar a fila de processamento de vendas utilize o seguinte comando
+```bash
+sail artisan queue:work --queue=sales --tries=10
+```
+
+para executar a fila de atualização de estoque utilize o seguinte comando
+```bash
+sail artisan queue:work --queue=inventory --tries=10
+```
