@@ -63,7 +63,7 @@ class InventoryService
         $productIds = $this->products->getAllproductsIdsAvailable();
 
         $items = [];
-
+        $missingProductIds = [];
         foreach ($productIds as $productId) {
             $cacheKey = $this->productCacheKey($productId);
             $cached = Cache::get($cacheKey);
@@ -73,13 +73,27 @@ class InventoryService
                 continue;
             }
 
-            $row = $this->inventory->getInventoryWithProductByProductId($productId);
-            $item = $this->buildInventoryItem($row);
-            Cache::put($cacheKey, $item, config('cache.product_cache_ttl'));
+            $missingProductIds[] = $productId;
+        }
+
+        $missingProducts = $this->inventory->getInventoryWithProductByProductIds($missingProductIds);
+        foreach ($missingProducts as $product) {
+            $item = $this->buildInventoryItem($product);
+
+            $this->setProductCache($product->product_id, $item);
             $items[] = $item;
         }
 
         return $items;
+    }
+
+    public function setProductCache(int $productId, array $data): void
+    {
+        Cache::put(
+            $this->productCacheKey($productId),
+            $data,
+            config('cache.product_cache_ttl')
+        );
     }
 
     public function refreshProductCache(int $productId): void
@@ -89,12 +103,7 @@ class InventoryService
         if (!$row) {
             return;
         }
-
-        Cache::put(
-            $this->productCacheKey($productId),
-            $this->buildInventoryItem($row),
-            config('cache.product_cache_ttl')
-        );
+        $this->setProductCache($productId, $this->buildInventoryItem($row));
     }
 
     private function productCacheKey(int $productId): string

@@ -22,21 +22,37 @@ class InventoryRepository
         return Inventory::query()
             ->rightJoin('products', 'inventory.product_id', '=', 'products.id')
             ->select(
-                [
-                    'inventory.id',
-                    'products.id as product_id',
-                    DB::raw('COALESCE(inventory.quantity, 0) as quantity'),
-                    'inventory.last_updated',
-                    'inventory.created_at',
-                    'inventory.updated_at',
-                    'products.sku',
-                    'products.name',
-                    'products.cost_price',
-                    'products.sale_price'
-                ]
+               $this->InventoryWithProductByProductIdAttrs()
             )
             ->where('products.id', $productId)
             ->first();
+    }
+
+    public function getInventoryWithProductByProductIds(array $productIds): ?Collection
+    {
+        return Inventory::query()
+            ->rightJoin('products', 'inventory.product_id', '=', 'products.id')
+            ->select(
+               $this->InventoryWithProductByProductIdAttrs()
+            )
+            ->whereIn('products.id', $productIds)
+            ->get();
+    }
+
+    private function InventoryWithProductByProductIdAttrs(): array
+    {
+        return [
+            'inventory.id',
+            'products.id as product_id',
+            DB::raw('COALESCE(inventory.quantity, 0) as quantity'),
+            'inventory.last_updated',
+            'inventory.created_at',
+            'inventory.updated_at',
+            'products.sku',
+            'products.name',
+            'products.cost_price',
+            'products.sale_price'
+        ];
     }
 
     public function loadProductAndInventoryWithLockForUpdate(array $saleItemIds): Collection
