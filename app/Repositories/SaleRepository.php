@@ -43,4 +43,14 @@ class SaleRepository
             ->lockForUpdate()
             ->firstOrFail();
     }
+
+    public function findWithItems(int $saleId): Sale
+    {
+        return Sale::query()
+            ->with([
+                'items.product'
+            ])
+            ->where('id', $saleId)
+            ->firstOrFail();
+    }
 }

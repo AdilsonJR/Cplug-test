@@ -35,6 +35,11 @@ class SaleService
         return $this->sales->getLockedById($saleId);
     }
 
+    public function getSaleDetails(int $saleId): Sale
+    {
+        return $this->sales->findWithItems($saleId);
+    }
+
     private function buildSaleItems(CreateSaleDTO $dto): array
     {
         $productIds = [];

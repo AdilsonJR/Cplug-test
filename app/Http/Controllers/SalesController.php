@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTOs\CreateSaleDTO;
 use App\Http\Requests\StoreSaleRequest;
+use App\UseCases\GetSaleUseCase;
 use App\UseCases\StoreSaleUseCase;
 use Exception;
 
@@ -20,6 +21,16 @@ class SalesController extends Controller
                 'created_at' => $sale->created_at,
                 'updated_at' => $sale->updated_at,
             ], 201);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    public function show(int $saleId, GetSaleUseCase $useCase)
+    {
+        try {
+            $sale = $useCase->execute($saleId);
+            return response()->json($sale);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
